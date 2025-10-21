@@ -50,3 +50,13 @@ Thumbs.db
 uploads/*
 !uploads/.gitkeep
 
+# CI/CD artifacts
+dist/
+coverage.out
+results.sarif
+
+# Backups
+backups/
+*.backup
+*.bak
+

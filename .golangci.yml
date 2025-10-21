@@ -1,0 +1,76 @@
+# Configuración de golangci-lint para PayVue
+# https://golangci-lint.run/usage/configuration/
+
+run:
+  timeout: 5m
+  tests: true
+  build-tags:
+    - integration
+
+linters:
+  enable:
+    - errcheck      # Verifica errores no manejados
+    - gosimple      # Simplificaciones de código
+    - govet         # Examina código Go en busca de errores
+    - ineffassign   # Detecta asignaciones ineficientes
+    - staticcheck   # Análisis estático avanzado
+    - unused        # Detecta código no usado
+    - gofmt         # Verifica formato
+    - goimports     # Verifica imports
+    - misspell      # Detecta errores ortográficos
+    - gocritic      # Mejores prácticas
+    - gocyclo       # Complejidad ciclomática
+    - gosec         # Seguridad
+    - dupl          # Duplicación de código
+    - prealloc      # Pre-alocación de slices
+    - unconvert     # Conversiones innecesarias
+    - unparam       # Parámetros no usados
+
+linters-settings:
+  errcheck:
+    check-type-assertions: true
+    check-blank: true
+  
+  gocyclo:
+    min-complexity: 15
+  
+  gosec:
+    excludes:
+      - G104 # No forzar verificación de errores en defer
+  
+  gocritic:
+    enabled-tags:
+      - diagnostic
+      - style
+      - performance
+    disabled-checks:
+      - commentFormatting
+  
+  misspell:
+    locale: US
+
+issues:
+  exclude-rules:
+    # Excluir ciertos linters de archivos de test
+    - path: _test\.go
+      linters:
+        - gocyclo
+        - errcheck
+        - dupl
+        - gosec
+    
+    # Excluir archivos generados
+    - path: \.pb\.go$
+      linters:
+        - gofmt
+        - goimports
+        - gocritic
+
+  max-issues-per-linter: 0
+  max-same-issues: 0
+
+output:
+  format: colored-line-number
+  print-issued-lines: true
+  print-linter-name: true
+

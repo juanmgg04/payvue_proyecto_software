@@ -1,0 +1,130 @@
+name: 🐛 Bug Report
+description: Reportar un error o comportamiento inesperado
+title: "[Bug]: "
+labels: ["bug", "needs-triage"]
+assignees: []
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Gracias por tomarte el tiempo de reportar este bug. Por favor, completa la información a continuación.
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Descripción del bug
+      description: Una descripción clara y concisa del bug
+      placeholder: "Ejemplo: Al intentar crear una deuda, la API devuelve error 500"
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: Pasos para reproducir
+      description: Pasos detallados para reproducir el comportamiento
+      placeholder: |
+        1. Ir a '...'
+        2. Hacer click en '...'
+        3. Enviar request a '...'
+        4. Ver error
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Comportamiento esperado
+      description: Descripción clara de lo que esperabas que sucediera
+      placeholder: "La deuda debería crearse exitosamente y retornar status 201"
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual
+    attributes:
+      label: Comportamiento actual
+      description: Lo que realmente está sucediendo
+      placeholder: "La API retorna error 500 con mensaje: 'internal server error'"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: service
+    attributes:
+      label: Servicio afectado
+      description: ¿Qué servicio tiene el problema?
+      options:
+        - Reader (Puerto 8080)
+        - Writer (Puerto 8081)
+        - Ambos
+        - No estoy seguro
+    validations:
+      required: true
+
+  - type: dropdown
+    id: severity
+    attributes:
+      label: Severidad
+      description: ¿Qué tan crítico es este bug?
+      options:
+        - 🔴 Crítico - La aplicación no funciona
+        - 🟠 Alto - Funcionalidad importante rota
+        - 🟡 Medio - Funcionalidad menor afectada
+        - 🟢 Bajo - Problema cosmético o menor
+    validations:
+      required: true
+
+  - type: textarea
+    id: environment
+    attributes:
+      label: Entorno
+      description: Información sobre el entorno donde ocurre el bug
+      value: |
+        - OS: [ej. Ubuntu 22.04, Windows 11, macOS 13]
+        - Versión de Go: [ej. 1.21.0]
+        - Método de ejecución: [Docker / Local / Otro]
+        - Versión de PayVue: [ej. v1.0.0, commit hash]
+    validations:
+      required: true
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs relevantes
+      description: Copia y pega logs, stack traces, o mensajes de error relevantes
+      render: shell
+      placeholder: |
+        2025-10-21 10:30:45 ERROR: Failed to create debt: sql: database is locked
+        at pkg/repository/debt/repository.go:45
+
+  - type: textarea
+    id: curl
+    attributes:
+      label: Comando curl (si aplica)
+      description: Si es un problema de API, proporciona el comando curl para reproducirlo
+      render: bash
+      placeholder: |
+        curl -X POST http://localhost:8081/api/v1/debts \
+          -H "Content-Type: application/json" \
+          -d '{"name":"Test","total_amount":1000,...}'
+
+  - type: textarea
+    id: additional
+    attributes:
+      label: Información adicional
+      description: Cualquier otra información, screenshots, o contexto que pueda ayudar
+
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: Checklist
+      options:
+        - label: He buscado en issues existentes y este bug no ha sido reportado
+          required: true
+        - label: He incluido pasos claros para reproducir el bug
+          required: true
+        - label: He incluido logs o mensajes de error relevantes
+          required: false
+
