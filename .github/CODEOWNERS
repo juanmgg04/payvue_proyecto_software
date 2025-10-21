@@ -1,0 +1,23 @@
+# CODEOWNERS - Auto-asignación de revisores
+# Reemplaza @tu-usuario con tu usuario real de GitHub
+
+# Por defecto, todo requiere revisión
+* @tu-usuario
+
+# Configuración de CI/CD
+/.github/ @tu-usuario
+
+# Configuración de Docker
+/Dockerfile @tu-usuario
+/docker-compose*.yml @tu-usuario
+
+# Domain layer - Lógica de negocio
+/pkg/domain/ @tu-usuario
+
+# Autenticación
+/pkg/rest/writer/auth/ @tu-usuario
+
+# Documentación
+/*.md @tu-usuario
+/docs/ @tu-usuario
+

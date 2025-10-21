@@ -1,0 +1,159 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+
+jobs:
+  # Crear release y compilar binarios para múltiples plataformas
+  release:
+    name: Crear Release
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        goos: [linux, darwin, windows]
+        goarch: [amd64, arm64]
+        exclude:
+          - goos: windows
+            goarch: arm64
+    steps:
+      - name: Checkout código
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.21'
+
+      - name: Extraer versión
+        id: version
+        run: |
+          VERSION=${GITHUB_REF#refs/tags/}
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "Versión: $VERSION"
+
+      - name: Build Reader
+        env:
+          GOOS: ${{ matrix.goos }}
+          GOARCH: ${{ matrix.goarch }}
+          CGO_ENABLED: 1
+        run: |
+          OUTPUT_NAME="reader-${{ matrix.goos }}-${{ matrix.goarch }}"
+          if [ "${{ matrix.goos }}" == "windows" ]; then
+            OUTPUT_NAME="${OUTPUT_NAME}.exe"
+          fi
+          
+          go build -v \
+            -ldflags="-X main.Version=${{ steps.version.outputs.version }} -X main.BuildTime=$(date -u '+%Y-%m-%d_%H:%M:%S')" \
+            -o "dist/${OUTPUT_NAME}" \
+            ./cmd/reader
+          
+          # Crear checksum
+          cd dist
+          sha256sum "${OUTPUT_NAME}" > "${OUTPUT_NAME}.sha256"
+          cd ..
+
+      - name: Build Writer
+        env:
+          GOOS: ${{ matrix.goos }}
+          GOARCH: ${{ matrix.goarch }}
+          CGO_ENABLED: 1
+        run: |
+          OUTPUT_NAME="writer-${{ matrix.goos }}-${{ matrix.goarch }}"
+          if [ "${{ matrix.goos }}" == "windows" ]; then
+            OUTPUT_NAME="${OUTPUT_NAME}.exe"
+          fi
+          
+          go build -v \
+            -ldflags="-X main.Version=${{ steps.version.outputs.version }} -X main.BuildTime=$(date -u '+%Y-%m-%d_%H:%M:%S')" \
+            -o "dist/${OUTPUT_NAME}" \
+            ./cmd/writer
+          
+          # Crear checksum
+          cd dist
+          sha256sum "${OUTPUT_NAME}" > "${OUTPUT_NAME}.sha256"
+          cd ..
+
+      - name: Crear archivo comprimido
+        run: |
+          cd dist
+          if [ "${{ matrix.goos }}" == "windows" ]; then
+            zip -r "payvue-${{ steps.version.outputs.version }}-${{ matrix.goos }}-${{ matrix.goarch }}.zip" *
+          else
+            tar -czf "payvue-${{ steps.version.outputs.version }}-${{ matrix.goos }}-${{ matrix.goarch }}.tar.gz" *
+          fi
+          cd ..
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: release-${{ matrix.goos }}-${{ matrix.goarch }}
+          path: dist/*
+
+  # Publicar release en GitHub
+  publish:
+    name: Publicar Release
+    runs-on: ubuntu-latest
+    needs: release
+    steps:
+      - name: Checkout código
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Download todos los artifacts
+        uses: actions/download-artifact@v3
+        with:
+          path: artifacts
+
+      - name: Generar changelog
+        id: changelog
+        uses: metcalfc/changelog-generator@v4.1.0
+        with:
+          myToken: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Crear GitHub Release
+        uses: softprops/action-gh-release@v1
+        with:
+          name: Release ${{ github.ref_name }}
+          body: |
+            ## 🚀 PayVue ${{ github.ref_name }}
+            
+            ### 📝 Changelog
+            ${{ steps.changelog.outputs.changelog }}
+            
+            ### 📦 Binarios
+            
+            Descarga el binario correspondiente a tu sistema operativo:
+            
+            - **Linux (amd64)**: `payvue-${{ github.ref_name }}-linux-amd64.tar.gz`
+            - **Linux (arm64)**: `payvue-${{ github.ref_name }}-linux-arm64.tar.gz`
+            - **macOS (amd64)**: `payvue-${{ github.ref_name }}-darwin-amd64.tar.gz`
+            - **macOS (arm64)**: `payvue-${{ github.ref_name }}-darwin-arm64.tar.gz`
+            - **Windows (amd64)**: `payvue-${{ github.ref_name }}-windows-amd64.zip`
+            
+            ### ✅ Verificación
+            
+            Verifica la integridad de los archivos descargados usando los archivos `.sha256`:
+            
+            ```bash
+            sha256sum -c payvue-${{ github.ref_name }}-linux-amd64.tar.gz.sha256
+            ```
+            
+            ### 🐳 Docker
+            
+            También puedes usar la imagen de Docker:
+            
+            ```bash
+            docker pull ${{ secrets.DOCKER_USERNAME }}/payvue:${{ github.ref_name }}
+            ```
+          files: artifacts/**/*
+          draft: false
+          prerelease: false
+          generate_release_notes: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+

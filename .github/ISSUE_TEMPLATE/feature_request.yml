@@ -1,0 +1,31 @@
+name: ✨ Feature Request
+description: Proponer una nueva funcionalidad
+title: "[Feature]: "
+labels: ["enhancement"]
+
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: ¿Qué problema resuelve?
+      placeholder: "Los usuarios necesitan poder exportar sus deudas a PDF"
+    validations:
+      required: true
+
+  - type: textarea
+    id: solution
+    attributes:
+      label: Solución propuesta
+      placeholder: |
+        Agregar un endpoint GET /api/v1/debts/export que:
+        1. Genera un PDF con las deudas
+        2. Permite filtrar por fecha
+    validations:
+      required: true
+
+  - type: textarea
+    id: additional
+    attributes:
+      label: Información adicional
+      description: Screenshots, links, ejemplos, etc.
+

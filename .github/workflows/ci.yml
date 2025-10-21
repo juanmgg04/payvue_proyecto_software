@@ -1,0 +1,37 @@
+name: CI
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+
+jobs:
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.19'
+
+      - name: Format check
+        run: |
+          if [ -n "$(gofmt -l .)" ]; then
+            echo "❌ Archivos sin formatear:"
+            gofmt -l .
+            echo "Ejecuta: gofmt -s -w ."
+            exit 1
+          fi
+
+      - name: Build
+        run: |
+          CGO_ENABLED=1 go build -v ./cmd/reader
+          CGO_ENABLED=1 go build -v ./cmd/writer
+
+      - name: Test
+        run: go test -v ./...
