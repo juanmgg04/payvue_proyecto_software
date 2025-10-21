@@ -7,4 +7,3 @@ import (
 type Handler interface {
 	RouteURLs(router *chi.Mux)
 }
-
