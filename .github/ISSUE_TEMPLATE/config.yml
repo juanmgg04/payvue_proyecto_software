@@ -1,14 +1,6 @@
 blank_issues_enabled: true
 contact_links:
-  - name: 💬 Discusiones
-    url: https://github.com/payvue/payvue-backend/discussions
-    about: Para preguntas generales o discusiones sobre el proyecto
-  
   - name: 📚 Documentación
-    url: https://github.com/payvue/payvue-backend/blob/main/README.md
-    about: Lee la documentación completa del proyecto
-  
-  - name: 🐛 Reportar vulnerabilidad de seguridad
-    url: https://github.com/payvue/payvue-backend/security/advisories/new
-    about: Para reportar vulnerabilidades de seguridad (NO uses issues públicos)
+    url: https://github.com/tu-usuario/payvue-backend/blob/main/README.md
+    about: Lee la documentación del proyecto
 

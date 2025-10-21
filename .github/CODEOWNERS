@@ -1,50 +1,23 @@
 # CODEOWNERS - Auto-asignación de revisores
-# Cada línea es un patrón de archivo seguido de uno o más propietarios
-# Los propietarios serán solicitados para revisión cuando alguien abra un PR que modifique estos archivos
+# Reemplaza @tu-usuario con tu usuario real de GitHub
 
-# Documentación: Puedes especificar usuarios (@username) o equipos (@org/team-name)
-
-# Por defecto, todo requiere revisión del equipo de backend
-* @payvue/backend-team
+# Por defecto, todo requiere revisión
+* @tu-usuario
 
 # Configuración de CI/CD
-/.github/ @payvue/devops-team
-/.github/workflows/ @payvue/devops-team
+/.github/ @tu-usuario
 
 # Configuración de Docker
-/Dockerfile @payvue/devops-team
-/docker-compose*.yml @payvue/devops-team
-/.dockerignore @payvue/devops-team
+/Dockerfile @tu-usuario
+/docker-compose*.yml @tu-usuario
 
-# Configuración del proyecto
-/go.mod @payvue/backend-team
-/go.sum @payvue/backend-team
-/Makefile @payvue/devops-team
+# Domain layer - Lógica de negocio
+/pkg/domain/ @tu-usuario
 
-# Domain layer - Lógica de negocio crítica
-/pkg/domain/ @payvue/backend-leads
-
-# Autenticación y seguridad
-/pkg/rest/writer/auth/ @payvue/security-team
-/pkg/domain/user/ @payvue/security-team
-
-# Base de datos y repositorios
-/pkg/repository/ @payvue/backend-team
-
-# APIs REST
-/pkg/rest/ @payvue/backend-team
+# Autenticación
+/pkg/rest/writer/auth/ @tu-usuario
 
 # Documentación
-/*.md @payvue/tech-leads
-/docs/ @payvue/tech-leads
-
-# Configuración de entorno
-/env.example @payvue/devops-team
-/.env* @payvue/devops-team
-
-# NOTA: Reemplaza @payvue/team-name con tus usuarios reales de GitHub:
-# Ejemplos:
-# * @tu-usuario
-# /pkg/domain/ @usuario1 @usuario2
-# /.github/workflows/ @devops-lead
+/*.md @tu-usuario
+/docs/ @tu-usuario
 

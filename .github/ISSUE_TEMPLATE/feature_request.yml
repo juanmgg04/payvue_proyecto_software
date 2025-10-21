@@ -1,21 +1,14 @@
 name: ✨ Feature Request
-description: Proponer una nueva funcionalidad o mejora
+description: Proponer una nueva funcionalidad
 title: "[Feature]: "
-labels: ["enhancement", "needs-triage"]
-assignees: []
+labels: ["enhancement"]
 
 body:
-  - type: markdown
-    attributes:
-      value: |
-        ¡Gracias por contribuir con ideas para mejorar PayVue! Por favor, describe tu propuesta a continuación.
-
   - type: textarea
     id: problem
     attributes:
-      label: Problema a resolver
-      description: ¿Qué problema o necesidad resuelve esta funcionalidad?
-      placeholder: "Ejemplo: Los usuarios necesitan poder exportar sus deudas a PDF para compartir con asesores financieros"
+      label: ¿Qué problema resuelve?
+      placeholder: "Los usuarios necesitan poder exportar sus deudas a PDF"
     validations:
       required: true
 
@@ -23,92 +16,16 @@ body:
     id: solution
     attributes:
       label: Solución propuesta
-      description: Describe cómo imaginas que esta funcionalidad debería funcionar
       placeholder: |
-        Agregar un nuevo endpoint GET /api/v1/debts/export/pdf que:
-        1. Genera un PDF con todas las deudas del usuario
-        2. Incluye gráficos de estado de deudas
-        3. Permite filtrar por fecha
+        Agregar un endpoint GET /api/v1/debts/export que:
+        1. Genera un PDF con las deudas
+        2. Permite filtrar por fecha
     validations:
       required: true
-
-  - type: dropdown
-    id: service
-    attributes:
-      label: Servicio involucrado
-      description: ¿Qué servicio debería implementar esta funcionalidad?
-      options:
-        - Reader (Consultas)
-        - Writer (Modificaciones)
-        - Ambos
-        - Nuevo servicio
-        - No estoy seguro
-    validations:
-      required: true
-
-  - type: dropdown
-    id: priority
-    attributes:
-      label: Prioridad
-      description: ¿Qué tan importante es esta funcionalidad?
-      options:
-        - 🔴 Alta - Bloqueante para usuarios
-        - 🟠 Media - Muy útil, mejora significativa
-        - 🟡 Baja - Nice to have
-    validations:
-      required: true
-
-  - type: textarea
-    id: api
-    attributes:
-      label: Diseño de API (si aplica)
-      description: Si es un nuevo endpoint, describe la API propuesta
-      render: markdown
-      placeholder: |
-        ### Endpoint
-        `GET /api/v1/debts/export/pdf`
-        
-        ### Query Parameters
-        - `start_date` (opcional): Fecha inicio (YYYY-MM-DD)
-        - `end_date` (opcional): Fecha fin (YYYY-MM-DD)
-        
-        ### Response
-        ```
-        Content-Type: application/pdf
-        Status: 200 OK
-        ```
-
-  - type: textarea
-    id: alternatives
-    attributes:
-      label: Alternativas consideradas
-      description: ¿Has considerado otras soluciones o workarounds?
-      placeholder: "Ejemplo: Consideré exportar a CSV, pero PDF es más profesional para compartir"
-
-  - type: textarea
-    id: examples
-    attributes:
-      label: Ejemplos o referencias
-      description: Links a implementaciones similares en otros productos o APIs
-      placeholder: |
-        - Stripe tiene un endpoint similar: https://stripe.com/docs/api/...
-        - Ejemplo de implementación: https://github.com/...
 
   - type: textarea
     id: additional
     attributes:
-      label: Contexto adicional
-      description: Cualquier otra información, mockups, o diagramas que ayuden a entender la propuesta
-
-  - type: checkboxes
-    id: checklist
-    attributes:
-      label: Checklist
-      options:
-        - label: He buscado en issues existentes y esta funcionalidad no ha sido propuesta
-          required: true
-        - label: Esta funcionalidad está alineada con el objetivo de PayVue
-          required: true
-        - label: Estoy dispuesto/a a ayudar a implementar esta funcionalidad
-          required: false
+      label: Información adicional
+      description: Screenshots, links, ejemplos, etc.
 
