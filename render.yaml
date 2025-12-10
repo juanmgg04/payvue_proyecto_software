@@ -14,8 +14,3 @@ services:
         value: production
       - key: DATABASE_PATH
         value: /app/data/payvue.db
-    disk:
-      name: payvue-data
-      mountPath: /app/data
-      sizeGB: 1
-
