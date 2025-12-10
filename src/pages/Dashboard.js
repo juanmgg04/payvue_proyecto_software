@@ -10,21 +10,18 @@ ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, BarEleme
 function Dashboard() {
   const [incomes, setIncomes] = useState([]);
   const [debts, setDebts] = useState([]);
-  const [payments, setPayments] = useState([]);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
 
   const fetchData = useCallback(async () => {
     try {
-      const [incomeRes, debtRes, paymentRes] = await Promise.all([
+      const [incomeRes, debtRes] = await Promise.all([
         api.get('/finances/income'),
-        api.get('/finances/debt'),
-        api.get('/finances/payment')
+        api.get('/finances/debt')
       ]);
       setIncomes(incomeRes.data || []);
       setDebts(debtRes.data || []);
-      setPayments(paymentRes.data || []);
     } catch (error) {
       console.error('Error fetching data:', error);
     }
@@ -38,7 +35,6 @@ function Dashboard() {
 
   const totalIncomes = incomes.reduce((sum, i) => sum + (i.amount || 0), 0);
   const totalExpenses = debts.reduce((sum, d) => sum + (d.installment_amount || 0), 0);
-  const totalPaid = payments.reduce((sum, p) => sum + (p.amount || 0), 0);
   const savings = totalIncomes - totalExpenses;
 
   const filteredDebts = debts.filter(debt => 
