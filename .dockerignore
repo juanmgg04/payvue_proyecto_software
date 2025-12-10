@@ -1,51 +1,9 @@
-# Git
+frontend/node_modules
+frontend/build
+backend/server
 .git
-.gitignore
-
-# Documentation
-*.md
-docs/
-
-# Build artifacts
-bin/
-*.exe
+.github
 *.db
-
-# Python backend (not needed in Go)
-backend/
-__pycache__/
-*.pyc
-
-# IDE
-.vscode/
-.idea/
-
-# Scripts
-*.ps1
-*.sh
-
-# Test files
-*_test.go
-test/
-
-# Docker
-Dockerfile
-docker-compose.yml
-.dockerignore
-
-# Other projects
-fury_investment-crypto-notification/
-
-# Environment (will copy .env explicitly)
-.env.local
-.env.development
-
-# Uploads (will mount as volume)
 uploads/*
-!uploads/.gitkeep
-
-# Data
-data/
-*.db
-
+data/*
 

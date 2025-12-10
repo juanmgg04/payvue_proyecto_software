@@ -6,16 +6,15 @@ RUN apk add --no-cache gcc musl-dev sqlite-dev
 
 WORKDIR /app
 
-# Copy go mod files
-COPY go.mod go.sum ./
+# Copy go mod files from backend
+COPY backend/go.mod backend/go.sum ./
 RUN go mod download
 
-# Copy source code
-COPY . .
+# Copy source code from backend
+COPY backend/ .
 
-# Build all binaries with CGO enabled
-RUN CGO_ENABLED=1 GOOS=linux go build -o /app/bin/reader ./cmd/reader/main.go
-RUN CGO_ENABLED=1 GOOS=linux go build -o /app/bin/writer ./cmd/writer/main.go
+# Build the unified server
+RUN CGO_ENABLED=1 GOOS=linux go build -o /app/bin/server ./cmd/server/main.go
 
 # Runtime stage
 FROM alpine:latest
@@ -25,20 +24,18 @@ RUN apk add --no-cache sqlite-libs ca-certificates
 
 WORKDIR /app
 
-# Copy binaries from builder
-COPY --from=builder /app/bin/reader /app/reader
-COPY --from=builder /app/bin/writer /app/writer
+# Copy binary from builder
+COPY --from=builder /app/bin/server /app/server
 
-# Copy .env file
-COPY .env* ./
-
-# Create uploads directory
-RUN mkdir -p /app/uploads
+# Create directories
+RUN mkdir -p /app/uploads /app/data
 
 # Expose port
 EXPOSE 8080
 
-# Default command (can be overridden by SCOPE)
-CMD ["sh", "-c", "if [ \"$SCOPE\" = \"writer\" ]; then ./writer; else ./reader; fi"]
+# Health check
+HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
+    CMD wget --no-verbose --tries=1 --spider http://localhost:8080/health || exit 1
 
-
+# Run the server
+CMD ["./server"]
