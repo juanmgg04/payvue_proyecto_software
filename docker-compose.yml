@@ -4,7 +4,7 @@ services:
   # Backend API
   api:
     build:
-      context: .
+      context: ./backend
       dockerfile: Dockerfile
     container_name: payvue-api
     environment:
@@ -14,9 +14,9 @@ services:
     ports:
       - "8080:8080"
     volumes:
-      # Bind mounts para persistencia garantizada (no se borran con docker-compose down)
-      - ./data:/app/data
-      - ./uploads:/app/uploads
+      # Bind mounts dentro de backend para persistencia
+      - ./backend/data:/app/data
+      - ./backend/uploads:/app/uploads
     restart: unless-stopped
     networks:
       - payvue-network

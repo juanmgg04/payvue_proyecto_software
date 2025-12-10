@@ -6,12 +6,12 @@ RUN apk add --no-cache gcc musl-dev sqlite-dev
 
 WORKDIR /app
 
-# Copy go mod files from backend
-COPY backend/go.mod backend/go.sum ./
+# Copy go mod files
+COPY go.mod go.sum ./
 RUN go mod download
 
-# Copy source code from backend
-COPY backend/ .
+# Copy source code
+COPY . .
 
 # Build the unified server
 RUN CGO_ENABLED=1 GOOS=linux go build -o /app/bin/server ./cmd/server/main.go
@@ -39,3 +39,4 @@ HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
 
 # Run the server
 CMD ["./server"]
+
